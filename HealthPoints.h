@@ -1,4 +1,4 @@
-
+#include <iostream>
 
 class HealthPoints
 {
@@ -93,9 +93,14 @@ class HealthPoints
          * operator >= checks if the given HealthPoints object has more health than the object
          * @param b given parameter to check
          */
-       friend bool operator<(const HealthPoints& a, const HealthPoints& b);
-
-        friend HealthPoints& HealthPoints::operator<<(HealthPoints health);
+        friend bool operator<(const HealthPoints& a, const HealthPoints& b);
+        
+        /*
+         * operator << used to print the object in the given format <m_healthPoints>(<m_maxHealthPoints>)
+         * @param os the out stream
+         * @param health the object needed to be printed
+         */
+        friend std::ostream& operator<<(std::ostream& os,HealthPoints health);
     private:
         int m_healthPoints;
         int m_maxHealthPoints;  
