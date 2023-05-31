@@ -1,5 +1,8 @@
 #include "HealthPoints.h"
 
+//--------------------------------------------- Member Functions -------------------------------------------------------
+
+//constructor
 HealthPoints::HealthPoints(const int maxPoints)
 {
     if(maxPoints <= 0)
@@ -10,6 +13,7 @@ HealthPoints::HealthPoints(const int maxPoints)
     this->m_healthPoints = maxPoints;
 }
 
+// operator -=
 HealthPoints& HealthPoints::operator-=(const int health)
 {
     if(health < 0)
@@ -27,6 +31,8 @@ HealthPoints& HealthPoints::operator-=(const int health)
     return *this;
 }
 
+
+//operator - 
 HealthPoints HealthPoints::operator-(const int health)
 {
     if(health <=0)
@@ -37,7 +43,7 @@ HealthPoints HealthPoints::operator-(const int health)
     return result-=health;
 }
 
-
+// operator +=
 HealthPoints& HealthPoints::operator+=(const int health)
 {
     if(health <=0)
@@ -52,47 +58,54 @@ HealthPoints& HealthPoints::operator+=(const int health)
     return *this;
 }
 
-HealthPoints HealthPoints::operator+(const int health)
+//---------------------------------------------- Friend Functions ------------------------------------------------------
+
+// operator <
+bool operator<(const HealthPoints& a, const HealthPoints& b)
+{
+    return a.m_healthPoints < b.m_healthPoints;
+}
+
+// operator <<
+std::ostream& operator<<(std::ostream& os,HealthPoints health)
+{
+    return os << health.m_healthPoints << "(" << health.m_maxHealthPoints << ")";
+}
+
+//--------------------------------------------- Non Member Non Friends -------------------------------------------------
+
+HealthPoints operator+(const int health, const HealthPoints& current)
 {
     if(health <=0)
     {
-        return *this;
+        return current;
     }
-    HealthPoints result(*this);
+    HealthPoints result(current);
     return result+=health;
 }
 
 bool operator==(const HealthPoints& a, const HealthPoints& b)
 {
-    return a.m_healthPoints == b.m_healthPoints;
+    return (a<=b) && (a>=b);
 }
 
 bool operator!=(const HealthPoints& a, const HealthPoints& b)
 {
-    return a.m_healthPoints != b.m_healthPoints;
+    return !(a == b);
 }
 
 bool operator>=(const HealthPoints& a, const HealthPoints& b)
 {
-    return a.m_healthPoints >= b.m_healthPoints;
+    return (a > b) || (a == b);
 }
 
 bool operator<=(const HealthPoints& a, const HealthPoints& b)
 {
-    return a.m_healthPoints <= b.m_healthPoints;
+    return (a < b) || (a ==b);
 }
 bool operator>(const HealthPoints& a, const HealthPoints& b)
 {
-    return a.m_healthPoints > b.m_healthPoints;
+    return !(a <= b);
 }
 
- bool operator<(const HealthPoints& a, const HealthPoints& b)
-{
-    return a.m_healthPoints < b.m_healthPoints;
-}
-
-std::ostream& operator<<(std::ostream& os,HealthPoints health)
-{
-    return os << health.m_healthPoints << "(" << health.m_maxHealthPoints << ")";
-}
 
