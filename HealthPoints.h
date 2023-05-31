@@ -7,18 +7,12 @@ class HealthPoints
          * constuctor for HealthPoints
          * @param  maxPoints is the max health points allowed
          */
-        HealthPoints(const int maxPoints = 100);
+        HealthPoints(const int maxPoints = DEFAULT_MAX_HEALTH);
         
         /*
          * Exception to throw for invalid argument
          */
         void InvalidArgument();
-
-        /*
-         * Constructor for HealthPoints with no parameters
-         * Needed for operator implementation 
-         */
-        HealthPoints();
 
         /*
          * operator -= subtracts from current health the given health 
@@ -37,7 +31,7 @@ class HealthPoints
          * Copy Constructor
          * needed for operator overloading
          */
-        HealthPoints(const HealthPoints& old);
+        HealthPoints(const HealthPoints& old) = default;
 
         /*
          * Operator = 

@@ -10,11 +10,6 @@ HealthPoints::HealthPoints(const int maxPoints)
     this->m_healthPoints = maxPoints;
 }
 
-HealthPoints::HealthPoints():
-m_healthPoints(DEFAULT_MAX_HEALTH), 
-m_maxHealthPoints(DEFAULT_MAX_HEALTH)
-{}
-
 HealthPoints& HealthPoints::operator-=(const int health)
 {
     if(health < 0)
@@ -42,10 +37,6 @@ HealthPoints HealthPoints::operator-(const int health)
     return result-=health;
 }
 
-HealthPoints::HealthPoints(const HealthPoints& old):
-m_healthPoints(old.m_healthPoints),
-m_maxHealthPoints(old.m_maxHealthPoints)
-{}
 
 HealthPoints& HealthPoints::operator+=(const int health)
 {
