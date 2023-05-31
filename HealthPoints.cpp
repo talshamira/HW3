@@ -7,7 +7,7 @@ HealthPoints::HealthPoints(const int maxPoints)
 {
     if(maxPoints <= 0)
     {
-        throw(HealthPoints::InvalidArgument);
+        throw(HealthPoints::InvalidArgument());
     }
     this->m_maxHealthPoints = maxPoints;
     this->m_healthPoints = maxPoints;

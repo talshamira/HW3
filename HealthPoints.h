@@ -13,7 +13,7 @@ class HealthPoints
         /*
          * Exception to throw for invalid argument
          */
-        void InvalidArgument();
+        class InvalidArgument{};
 
         /*
          * operator -= subtracts from current health the given health 
