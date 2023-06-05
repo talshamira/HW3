@@ -1,45 +1,55 @@
+//
+// Created by user on 05/06/2023.
+//
+
+#ifndef HW3_QUEUE_H
+#define HW3_QUEUE_H
+
+
 template <class T>
 class Queue
 {
     class Node
     {
-        public:
-            T m_data;
-            Node m_next;
-            Node();
-            ~Node() = default;
-            Node(const Node& other) = default;
-            Node operator=(const Node& other) = default;
-            void deleteList(Node& first);
+    public:
+        T m_data;
+        Node m_next;
+        Node();
+        ~Node() = default;
+        Node(const Node& other) = default;
+        Node operator=(const Node& other) = default;
+        void deleteList(Node& first);
     };
 
-    public:
-        Queue();
+public:
+    Queue();
 
-        void pushBack(const T& element);
+    class Iterator;
+    Iterator begin(); //deleted const because the same reason with front
+    Iterator end();
 
-        T& front() const;
+    class ConstIterator;
+    ConstIterator begin() const;
+    ConstIterator end() const;
+    class EmptyQueue{};
 
-        const T& front() const;
+    void pushBack(const T& element);
 
-        Node& popFront();
+    T& front() const;
 
+    const T& front() const;
 
-        int size() const;
+    Node& popFront();
 
-        
+    int size() const;
 
-        class Iterator;
-        Iterator begin() const;
-        Iterator end() const;
+    void transform(Queue<class T> queueForTrans, void (*f)(T&));
 
-        class ConstIterator;
-        ConstIterator begin() const;
-        ConstIterator end() const;
-        class EmptyQueue{};
-    private:
-        Node* m_first;
+private:
+    Node* m_first;
 };
+
+
 
 //---------------------- Iterator Class Start --------------------------------------------------------------------------
 template<class T>
@@ -48,30 +58,30 @@ class Queue<T>::Iterator
     Queue<T>::Node* m_node;
     friend class Queue;
     Iterator(Queue<T>::Node* node);
-    public:
-        class InvalidOperation{};
-        const T& operator*() const;
-        Iterator& operator++();
-        Iterator operator++(int);
-        bool operator!=(const Iterator& it) const;
-        Iterator(const Iterator&) = default;
-        Iterator& operator=(const Iterator&) = default;
-        ~Iterator() = default;
+public:
+    class InvalidOperation{};
+    const T& operator*() const;
+    Iterator& operator++();
+    Iterator operator++(int);
+    bool operator!=(const Iterator& it) const;
+    Iterator(const Iterator&) = default;
+    Iterator& operator=(const Iterator&) = default;
+    ~Iterator() = default;
 };
 
 template <class T>
 Queue<T>::Iterator::Iterator(Queue<T>::Node* node):
-    m_node(node)
+        m_node(node)
 {}
 
 template <class T>
-const T& Queue<T>::Iterator::operator*() const
+T& Queue<T>::Iterator::operator*() const
 {
     if(m_node == nullptr)
     {
         throw(InvalidOperation());
     }
-    m_node= m_node->m_data;
+    return m_node->m_data;
 }
 
 template <class T>
@@ -116,18 +126,18 @@ class Queue<T>::ConstIterator
     Queue<T>::Node* m_node;
     friend class Queue;
     ConstIterator(Queue<T>::Node* node);
-    public:
-        const T&  operator*() const;
-        ConstIterator& operator++();
-        ConstIterator operator++(int);
-        bool operator!=(const ConstIterator& it) const;
-        ConstIterator(const ConstIterator&) = default;
-        ConstIterator& operator=(const ConstIterator&) = default;
-        ~ConstIterator()=default;
+public:
+    const T&  operator*() const;
+    ConstIterator& operator++();
+    ConstIterator operator++(int);
+    bool operator!=(const ConstIterator& it) const;
+    ConstIterator(const ConstIterator&) = default;
+    ConstIterator& operator=(const ConstIterator&) = default;
+    ~ConstIterator()=default;
 };
 template <class T>
 Queue<T>::ConstIterator::ConstIterator(Queue<T>::Node* node):
-    m_node(node)
+        m_node(node)
 {}
 
 template <class T>
@@ -137,7 +147,7 @@ const T& Queue<T>::ConstIterator::operator*() const
     {
         throw(InvalidOperation());
     }
-    return m_node= m_node->m_data;
+    return m_node->m_data;
 }
 
 template <class T>
@@ -175,16 +185,18 @@ bool Queue<T>::ConstIterator::operator!=(const ConstIterator& it) const
 }
 //---------------------- ConstIterator Class End -----------------------------------------------------------------------
 
-//---------------------- Node Class Start ------------------------------------------------------------------------------ 
+//---------------------- Node Class Start ------------------------------------------------------------------------------
 
 template <class T>
 Queue<T>::Node::Node():
-Queue<T>::Node::m_next(nullptr)
+
+        Queue<T>::Node::m_next(nullptr)
 {}
 
 template <class T>
 void Queue<T>::Node::deleteList(Node& first)
 {
+    // TODO: make sure first is null in some point
     while(first != nullptr)
     {
         Node* toDelete = first;
@@ -200,7 +212,7 @@ Queue<T>::Queue()
 {
     try
     {
-        this->m_first = new Node;        
+        this->m_first = new Node;
     }
     catch(const std::bad_alloc& e)
     {
@@ -236,18 +248,19 @@ void Queue<T>::pushBack(const T& element)
         Queue<T>::Node::deleteList(temp);
         throw(std::bad_alloc());
     }
+    // TODO: why use iterator here? this->end()->m_next = new Node (not directly)
     endIt.node->m_next = temp;
 }
 
 
 template <class T>
-T& Queue<T>::front() const
+T& Queue<T>::front()
 {
     if(this->m_first->m_next->m_next == nullptr)
     {
         throw(EmptyQueue());
     }
-    
+
     return this->m_first->m_next->m_data;
 }
 
@@ -258,31 +271,79 @@ const T& Queue<T>::front() const
     {
         throw(EmptyQueue());
     }
-    
+
     return this->m_first->m_next->m_data;
 }
 
 template <class T>
-Queue<T>::Node& Queue<T>::popFront()
+void Queue<T>::popFront()
 {
     if(this->m_first->m_next->m_next == nullptr)
     {
         throw(EmptyQueue());
     }
-    Queue<T>::Node* temp = this->m_first->m_next;
-    this->m_first->m_next = temp->m_next;
-    temp->m_next = nullptr;
-    return temp;
-} 
+    this->m_first = this->m_first->m_next;
+}
+
 template<class T>
-int Queue<T>::size() const
-{
-    //set to -2 because of begging node and end node 
+int Queue<T>::size() const {
+    //set to -2 because of begging node and end node
     int counter = -2;
-    for(Queue<T>::Node runner : this)
-    {
+    for (Queue<T>::Node runner: this) {
         counter++;
     }
     return counter;
 }
 
+template<class T>
+Iterator Queue<T>::begin()
+{
+    return this->m_first;
+}
+
+template<class T>
+Iterator Queue<T>::end()
+{
+    int current_size = this->size();
+    return Iterator(this, current_size);
+}
+
+template<class T>
+ConstIterator Queue<T>::begin() const
+{
+    return this->m_first;
+}
+
+template<class T>
+ConstIterator Queue<T>::end() const
+{
+    int current_size = this->size();
+    return ConstIterator(this, current_size);
+}
+
+template<class T>
+void Queue<T>::transform(Queue<class T> originalQueue, void (*f)(T&))
+{
+    for (it = originalQueue.begin(); it != originalQueue.end(); ++it)
+    {
+        (*f)(it->m_data);
+    }
+}
+
+template<class T>
+Queue<T>& filter(Queue<class T> originalQueue, bool (*f)(T&))
+{
+    //Iterator it = queueForTrans.begin();
+    Queue<T> newQueue;
+    for (it = originalQueue.begin(); it != originalQueue.end(); ++it)
+    {
+        if((*f)(it->m_data))
+        {
+            newQueue.pushBack(it->m_data);
+        }
+    }
+    return newQueue;
+}
+//void transform(Queue<class T> queueForTrans, void (*f)(T&));
+
+#endif //HW3_QUEUE_H
