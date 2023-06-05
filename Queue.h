@@ -303,9 +303,10 @@ typename Queue<T>::Queue& Queue<T>::operator=(const Queue<T>& old)
         delete tempQueue;
         throw(std::bad_alloc());
     }
-    Node* temp = this.m_first;
+    Node* temp = this->m_first;
     this->m_first = tempQueue.m_first;
     tempQueue.m_first = temp;
+    return *this;
 }
 
 template <class T>

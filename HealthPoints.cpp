@@ -58,6 +58,14 @@ HealthPoints& HealthPoints::operator+=(const int health)
     return *this;
 }
 
+HealthPoints& HealthPoints::operator+(const int health)
+{
+    if(health <=0)
+    {
+        return *this;
+    }
+    return *this+=health;
+}
 //---------------------------------------------- Friend Functions ------------------------------------------------------
 
 // operator <

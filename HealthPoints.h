@@ -29,11 +29,18 @@ class HealthPoints
         HealthPoints operator-(const int health);
 
          /*
-         * operator -= adds to current health the given health 
+         * operator += adds to current health the given health 
          * and makes sure current health doesnt go above m_maxHealthPoints
          * @param health given health to add
          */
         HealthPoints& operator+=(const int health);
+
+         /*
+         * operator + adds to current health the given health 
+         * and makes sure current health doesnt go above m_maxHealthPoints
+         * @param health given health to add
+         */
+        HealthPoints& operator+(const int health);
 // --------------------------------- Default Functions------------------------------------------------------------------
         /*
          * Copy Constructor
