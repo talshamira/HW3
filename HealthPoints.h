@@ -40,7 +40,7 @@ class HealthPoints
          * and makes sure current health doesnt go above m_maxHealthPoints
          * @param health given health to add
          */
-        HealthPoints& operator+(const int health);
+        HealthPoints operator+(const int health);
 // --------------------------------- Default Functions------------------------------------------------------------------
         /*
          * Copy Constructor
@@ -90,7 +90,6 @@ class HealthPoints
  * @param current is the healthPoints object to wich we add the health
  */
 HealthPoints operator+(const int health, const HealthPoints& current);
-
 
 /*
  * operator == checks if a has the same amount of health as b 

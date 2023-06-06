@@ -48,8 +48,6 @@ class Queue
 
     int size() const;
 
-    int size();
-
 private:
     Node* m_first;
 };
@@ -367,7 +365,6 @@ void Queue<T>::popFront()
 {
     if(this->m_first->m_next->m_next == nullptr)
     {
-
         throw(EmptyQueue());
     }
     Queue<T>::Node* toDelete = this->m_first;
@@ -388,7 +385,7 @@ int Queue<T>::size() const {
     }
     return counter;
 }
-
+/*
 template<class T>
 int Queue<T>::size() {
     //set to -2 because of begging node and end node
@@ -400,7 +397,7 @@ int Queue<T>::size() {
         runner = runner->m_next;
     }
     return counter;
-}
+}*/
 
 template<class T>
 typename Queue<T>::Iterator Queue<T>::begin()
@@ -443,10 +440,6 @@ typename Queue<T>::ConstIterator Queue<T>::end() const
 template<class T, typename Condition>
 void transform(Queue<T>& originalQueue, const Condition condition)
 {
-    if(originalQueue.size() == 0)
-    {
-        return;
-    }
     for (T& it : originalQueue) 
     {
         condition(it);

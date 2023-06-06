@@ -16,10 +16,6 @@ HealthPoints::HealthPoints(const int maxPoints)
 // operator -=
 HealthPoints& HealthPoints::operator-=(const int health)
 {
-    if(health < 0)
-    {
-        return *this;
-    }
     if(health > m_healthPoints)
     {
         m_healthPoints = 0;
@@ -27,6 +23,10 @@ HealthPoints& HealthPoints::operator-=(const int health)
     else
     {
         m_healthPoints -=health;
+        if(m_healthPoints > m_maxHealthPoints)
+        {
+            m_healthPoints = m_maxHealthPoints;
+        }
     }
     return *this;
 }
@@ -35,10 +35,6 @@ HealthPoints& HealthPoints::operator-=(const int health)
 //operator - 
 HealthPoints HealthPoints::operator-(const int health)
 {
-    if(health <=0)
-    {
-        return *this;
-    }
     HealthPoints result(*this);
     return result-=health;
 }
@@ -46,25 +42,23 @@ HealthPoints HealthPoints::operator-(const int health)
 // operator +=
 HealthPoints& HealthPoints::operator+=(const int health)
 {
-    if(health <=0)
-    {
-        return *this;
-    }
     this->m_healthPoints +=health;
     if(this->m_healthPoints > this->m_maxHealthPoints)
     {
         this->m_healthPoints = this->m_maxHealthPoints;
     }
+    if(this->m_healthPoints < 0)
+    {
+        this->m_healthPoints = 0;
+    }
     return *this;
 }
 
-HealthPoints& HealthPoints::operator+(const int health)
+HealthPoints HealthPoints::operator+(const int health)
 {
-    if(health <=0)
-    {
-        return *this;
-    }
-    return *this+=health;
+    HealthPoints result (*this);
+    result+=health;
+    return result;
 }
 //---------------------------------------------- Friend Functions ------------------------------------------------------
 
@@ -84,17 +78,18 @@ std::ostream& operator<<(std::ostream& os,HealthPoints health)
 
 HealthPoints operator+(const int health, const HealthPoints& current)
 {
-    if(health <=0)
+   /* if(health <=0)
     {
         return current;
-    }
-    HealthPoints result(current);
-    return result+=health;
+    }*/
+    HealthPoints result = current;
+    result += health;
+    return result;
 }
 
 bool operator==(const HealthPoints& a, const HealthPoints& b)
 {
-    return (a<=b) && (a>=b);
+    return (!(a < b) && !(b < a));
 }
 
 bool operator!=(const HealthPoints& a, const HealthPoints& b)
