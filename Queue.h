@@ -48,6 +48,7 @@ class Queue
 
     int size() const;
 
+    int size();
 
 private:
     Node* m_first;
@@ -225,10 +226,13 @@ Queue<T>::Queue()
         delete this->m_first;
         throw(std::bad_alloc());
     }
-    Node* temp;
+    Node* temp = new Node;;
     try
     {
-        temp = new Node;
+        if(temp == nullptr)
+        {
+            throw(std::bad_alloc());
+        } 
     }
     catch(const std::bad_alloc& e)
     {
@@ -251,10 +255,13 @@ Queue<T>::Queue(const Queue<T>& old)
         delete this->m_first;
         throw(std::bad_alloc());
     }
-    Node* temp;
+    Node* temp = new Node;;
     try
     {
-        temp = new Node;
+        if(temp == nullptr)
+        {
+            throw(std::bad_alloc());
+        } 
     }
     catch(const std::bad_alloc& e)
     {
@@ -293,16 +300,18 @@ typename Queue<T>::Queue& Queue<T>::operator=(const Queue<T>& old)
     {
         return *this;
     }
-    Queue tempQueue;
-    try
+    Queue tempQueue(old); 
+   /* try
     {
-        tempQueue(old); //*************************************************************************************************** probably wrong if not working change
+       if(*tempQueue == nullptr)
+       {
+        throw(std::bad_alloc());
+       }
     }
     catch(const std::bad_alloc& e)
     {
-        delete tempQueue;
-        throw(std::bad_alloc());
-    }
+        delete tempQueue; 
+    }*/
     Node* temp = this->m_first;
     this->m_first = tempQueue.m_first;
     tempQueue.m_first = temp;
@@ -314,10 +323,13 @@ void Queue<T>::pushBack(const T& element)
 {
     Queue<T>::Iterator endIt = this->end();
     endIt.m_node->m_data = element;
-    Node* temp;
+    Node* temp = new Node;;
     try
     {
-        temp = new Node;
+        if(temp == nullptr)
+        {
+            throw(std::bad_alloc());
+        } 
     }
     catch(const std::bad_alloc& e)
     {
@@ -355,13 +367,30 @@ void Queue<T>::popFront()
 {
     if(this->m_first->m_next->m_next == nullptr)
     {
+
         throw(EmptyQueue());
     }
+    Queue<T>::Node* toDelete = this->m_first;
     this->m_first = this->m_first->m_next;
+    toDelete->m_next=nullptr;
+    toDelete->deleteList(toDelete);
 }
 
 template<class T>
 int Queue<T>::size() const {
+    //set to -2 because of begging node and end node
+    int counter = -2;
+    Node* runner = this->m_first;
+    while(runner != nullptr)
+    {
+        counter++;
+        runner = runner->m_next;
+    }
+    return counter;
+}
+
+template<class T>
+int Queue<T>::size() {
     //set to -2 because of begging node and end node
     int counter = -2;
     Node* runner = this->m_first;
@@ -385,7 +414,7 @@ template<class T>
 typename Queue<T>::Iterator Queue<T>::end()
 {
     Node* runner = this->m_first;
-    while(runner != nullptr)
+    while(runner->m_next != nullptr)
     {
         runner = runner->m_next;
     } 
@@ -404,7 +433,7 @@ template<class T>
 typename Queue<T>::ConstIterator Queue<T>::end() const
 {
     Node* runner = this->m_first;
-    while(runner != nullptr)
+    while(runner->m_next != nullptr)
     {
         runner = runner->m_next;
     } 
@@ -412,8 +441,12 @@ typename Queue<T>::ConstIterator Queue<T>::end() const
 }
 
 template<class T, typename Condition>
-void transform(Queue<T> originalQueue, const Condition condition)
+void transform(Queue<T>& originalQueue, const Condition condition)
 {
+    if(originalQueue.size() == 0)
+    {
+        return;
+    }
     for (T& it : originalQueue) 
     {
         condition(it);
@@ -421,7 +454,7 @@ void transform(Queue<T> originalQueue, const Condition condition)
 }
 
 template<class T, typename Condition>
-Queue<T> filter(const Queue<T> originalQueue, const Condition condition)
+Queue<T> filter(const Queue<T>& originalQueue, const Condition condition)
 {
     if(originalQueue.size() == 0)
     {
